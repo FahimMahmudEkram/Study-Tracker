@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Time Tracker - Boost Your Productivity</title>
+    <meta name="description" content="Advanced study time tracking app with Pomodoro timer, goal setting, achievements, and detailed analytics to optimize your learning habits.">
+    <link rel="stylesheet" href="study-tracker.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title">📚 Study Tracker</h1>
+                <div class="header-controls">
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌓</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-button active" data-tab="timer">⏱️ Timer</button>
+            <button class="tab-button" data-tab="goals">🎯 Goals</button>
+            <button class="tab-button" data-tab="analytics">📊 Analytics</button>
+            <button class="tab-button" data-tab="achievements">🏆 Achievements</button>
+            <button class="tab-button" data-tab="settings">⚙️ Settings</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Timer Section -->
+            <section id="timer-section" class="tab-content active">
+                <div class="timer-container">
+                    <!-- Timer Display -->
+                    <div class="timer-display">
+                        <div class="timer-circle">
+                            <svg class="progress-ring" width="260" height="260">
+                                <circle class="progress-ring-background" cx="130" cy="130" r="120"></circle>
+                                <circle class="progress-ring-progress" cx="130" cy="130" r="120"></circle>
+                            </svg>
+                            <div class="timer-content">
+                                <div class="time-display" id="time-display">00:00:00</div>
+                                <div class="timer-status" id="timer-status">Ready to start</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Controls -->
+                    <div class="timer-controls">
+                        <div class="subject-selection">
+                            <label for="subject-select">Select Subject:</label>
+                            <select id="subject-select" class="subject-select">
+                                <option value="">Choose a subject...</option>
+                            </select>
+                            <div class="add-subject">
+                                <input type="text" id="new-subject" placeholder="Add new subject..." class="subject-input">
+                                <button id="add-subject-btn" class="add-btn">➕</button>
+                            </div>
+                        </div>
+
+                        <div class="pomodoro-toggle">
+                            <label class="switch">
+                                <input type="checkbox" id="pomodoro-mode">
+                                <span class="slider"></span>
+                            </label>
+                            <span>Pomodoro Mode</span>
+                        </div>
+
+                        <div class="control-buttons">
+                            <button id="start-btn" class="control-btn start-btn">▶️ Start</button>
+                            <button id="pause-btn" class="control-btn pause-btn" disabled>⏸️ Pause</button>
+                            <button id="stop-btn" class="control-btn stop-btn" disabled>⏹️ Stop</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Goals Section -->
+            <section id="goals-section" class="tab-content">
+                <div class="goals-container">
+                    <div class="section-header">
+                        <h2>🎯 Study Goals</h2>
+                        <button id="add-goal-btn" class="add-btn">➕ Add Goal</button>
+                    </div>
+
+                    <div class="add-goal-form" id="add-goal-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="goal-title">Goal Title:</label>
+                            <input type="text" id="goal-title" placeholder="e.g., Complete Math Chapter 5">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="goal-hours">Target Hours:</label>
+                                <input type="number" id="goal-hours" min="0.0000001" step="0.0000001" placeholder="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="goal-timeframe">Timeframe:</label>
+                                <select id="goal-timeframe">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button id="save-goal-btn" class="save-btn">💾 Save Goal</button>
+                            <button id="cancel-goal-btn" class="cancel-btn">❌ Cancel</button>
+                        </div>
+                    </div>
+
+                    <div class="goals-list" id="goals-list">
+                        <!-- Goals will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="tab-content">
+                <div class="analytics-container">
+                    <h2>📊 Study Analytics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-hours">0.0</div>
+                            <div class="stat-label">Total Hours</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-sessions">0</div>
+                            <div class="stat-label">Sessions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="current-streak">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="avg-session">0m</div>
+                            <div class="stat-label">Avg Session</div>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-container">
+                        <div class="chart-section">
+                            <h3>Daily Study Hours (Last 7 Days)</h3>
+                            <div class="chart" id="daily-chart"></div>
+                        </div>
+                        <div class="chart-section">
+                            <h3>Study by Subject</h3>
+                            <div class="chart" id="subject-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section id="achievements-section" class="tab-content">
+                <div class="achievements-container">
+                    <div class="section-header">
+                        <h2>🏆 Achievements</h2>
+                        <button id="add-achievement-btn" class="add-btn">➕ Custom Achievement</button>
+                    </div>
+
+                    <div class="add-achievement-form" id="add-achievement-form" style="display: none;">
+                        <div class="form-group">
+                            <label for="achievement-name">Achievement Name:</label>
+                            <input type="text" id="achievement-name" placeholder="e.g., Math Master">
+                        </div>
+                        <div class="form-group">
+                            <label for="achievement-description">Description:</label>
+                            <input type="text" id="achievement-description" placeholder="e.g., Study math for 50 hours">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="achievement-icon">Icon:</label>
+                                <input type="text" id="achievement-icon" placeholder="🧮" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label for="achievement-target">Target Value:</label>
+                                <input type="number" id="achievement-target" min="1" placeholder="50">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button id="save-achievement-btn" class="save-btn">💾 Create Achievement</button>
+                            <button id="cancel-achievement-btn" class="cancel-btn">❌ Cancel</button>
+                        </div>
+                    </div>
+
+                    <div class="achievements-grid" id="achievements-list">
+                        <!-- Achievements will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="tab-content">
+                <div class="settings-container">
+                    <h2>⚙️ Settings</h2>
+                    
+                    <div class="settings-group">
+                        <h3>🍅 Pomodoro Settings</h3>
+                        <div class="setting-item">
+                            <label for="work-time">Work Time (minutes):</label>
+                            <input type="number" id="work-time" min="1" value="25">
+                        </div>
+                        <div class="setting-item">
+                            <label for="break-time">Break Time (minutes):</label>
+                            <input type="number" id="break-time" min="1" value="5">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>🔊 Sound Settings</h3>
+                        <div class="setting-item">
+                            <label class="switch">
+                                <input type="checkbox" id="sound-effects" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span>Enable Sound Effects</span>
+                        </div>
+                        <button id="test-sounds-btn" class="test-btn">🔊 Test Sounds</button>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>📚 Subjects</h3>
+                        <div class="subjects-list" id="subjects-list">
+                            <!-- Subjects will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="settings-group danger-zone">
+                        <h3>🔄 Reset Data</h3>
+                        <div class="warning-box">
+                            <div class="warning-header">
+                                <span class="warning-icon">⚠️</span>
+                                <strong>Warning: This action cannot be undone!</strong>
+                            </div>
+                            <p>All your progress, achievements, and data will be permanently deleted.</p>
+                        </div>
+                        <button id="reset-data-btn" class="reset-btn">🔄 Reset All Data</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+
+    <script src="study-tracker.js"></script>
+</body>
+</html>
