@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="description" content="An offline-first study tracker with an accurate timer, Pomodoro sessions, goals, analytics, achievements, and a study heatmap.">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="study-tracker.css">
+    <title>Study Tracker</title>
+</head>
+<body>
+<div class="app-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="brand-wrap">
+                <div class="brand-icon" aria-hidden="true">📚</div>
+                <div><h1 class="app-title">Study Tracker</h1><p class="app-subtitle">Study smarter. See your progress.</p></div>
+            </div>
+            <div class="header-controls">
+                <span id="offline-status" class="status-pill">● Online</span>
+                <button id="install-app-btn" class="icon-btn install-btn hidden" type="button" aria-label="Install Study Tracker">📲 Install</button>
+                <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle theme">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-tabs" aria-label="Primary navigation">
+        <button class="tab-button active" data-tab="timer" type="button">⏱️ <span>Timer</span></button>
+        <button class="tab-button" data-tab="goals" type="button">🎯 <span>Goals</span></button>
+        <button class="tab-button" data-tab="analytics" type="button">📊 <span>Analytics</span></button>
+        <button class="tab-button" data-tab="achievements" type="button">🏆 <span>Achievements</span></button>
+        <button class="tab-button" data-tab="settings" type="button">⚙️ <span>Settings</span></button>
+    </nav>
+
+    <main class="main-content">
+        <section id="timer-section" class="tab-content active">
+            <div class="hero-grid">
+                <div class="timer-card glass-card">
+                    <div class="timer-topline">
+                        <div><p class="eyebrow" id="timer-phase">FOCUS</p><h2 id="timer-heading">Ready to study?</h2></div>
+                        <span id="timer-badge" class="timer-badge">Normal timer</span>
+                    </div>
+                    <div class="timer-display">
+                        <div class="timer-circle" aria-live="polite">
+                            <svg class="progress-ring" viewBox="0 0 260 260" aria-hidden="true"><circle class="progress-ring-background" cx="130" cy="130" r="120"></circle><circle id="progress-ring-progress" class="progress-ring-progress" cx="130" cy="130" r="120"></circle></svg>
+                            <div class="timer-content"><div class="time-display" id="time-display">00:00:00</div><div class="timer-status" id="timer-status">Choose a subject and start when you're ready.</div></div>
+                        </div>
+                    </div>
+                    <div class="timer-meta">
+                        <div><span>Today</span><strong id="today-study-time">0m</strong></div>
+                        <div><span>Streak</span><strong id="timer-streak">0 days</strong></div>
+                        <div><span>Sessions</span><strong id="today-sessions">0</strong></div>
+                    </div>
+                </div>
+
+                <div class="controls-card glass-card">
+                    <div class="card-heading"><div><p class="eyebrow">SESSION</p><h2>Set up your study session</h2></div></div>
+                    <div class="form-group"><label for="subject-select">Subject</label><select id="subject-select" class="subject-select"><option value="">Choose a subject...</option></select></div>
+                    <div class="inline-form"><input type="text" id="new-subject" placeholder="Add a new subject" class="subject-input" maxlength="40"><button id="add-subject-btn" class="secondary-btn" type="button">＋ Add</button></div>
+                    <div class="pomodoro-panel"><div><strong>🍅 Pomodoro mode</strong><span id="pomodoro-summary">25 min focus · 5 min break</span></div><label class="switch" aria-label="Toggle Pomodoro mode"><input type="checkbox" id="pomodoro-mode"><span class="slider"></span></label></div>
+                    <div class="control-buttons"><button id="start-btn" class="control-btn start-btn" type="button">▶ Start</button><button id="pause-btn" class="control-btn pause-btn" type="button" disabled>⏸ Pause</button><button id="stop-btn" class="control-btn stop-btn" type="button" disabled>⏹ Stop</button></div>
+                    <p class="timer-tip">Tip: your timer uses real timestamps, so it stays accurate even if the browser throttles background tabs.</p>
+                </div>
+            </div>
+            <div class="quick-stats-grid">
+                <div class="mini-stat"><span>Today's goal</span><strong id="today-goal-summary">No goal yet</strong></div>
+                <div class="mini-stat"><span>Weekly goal</span><strong id="weekly-goal-summary">No goal yet</strong></div>
+                <div class="mini-stat"><span>Top subject</span><strong id="top-subject-summary">—</strong></div>
+                <div class="mini-stat"><span>Best day</span><strong id="best-day-summary">—</strong></div>
+            </div>
+        </section>
+
+        <section id="goals-section" class="tab-content">
+            <div class="section-header"><div><p class="eyebrow">TARGETS</p><h2>🎯 Study Goals</h2></div><button id="add-goal-btn" class="primary-btn" type="button">＋ Add Goal</button></div>
+            <div class="form-card" id="add-goal-form" hidden>
+                <div class="form-group"><label for="goal-title">Goal title</label><input type="text" id="goal-title" placeholder="e.g. Finish Math Chapter 5" maxlength="80"></div>
+                <div class="form-grid-2"><div class="form-group"><label for="goal-hours">Target hours</label><input type="number" id="goal-hours" min="0.1" step="0.1" placeholder="5"></div><div class="form-group"><label for="goal-timeframe">Timeframe</label><select id="goal-timeframe"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></div></div>
+                <div class="form-actions"><button id="save-goal-btn" class="primary-btn" type="button">💾 Save Goal</button><button id="cancel-goal-btn" class="secondary-btn" type="button">Cancel</button></div>
+            </div>
+            <div class="goals-list" id="goals-list"></div>
+        </section>
+
+        <section id="analytics-section" class="tab-content">
+            <div class="section-header analytics-heading"><div><p class="eyebrow">INSIGHTS</p><h2>📊 Your study analytics</h2><p class="section-description">Understand when, what, and how consistently you study.</p></div><div class="range-switch" role="group" aria-label="Analytics range"><button type="button" class="range-btn active" data-range="7">7D</button><button type="button" class="range-btn" data-range="30">30D</button><button type="button" class="range-btn" data-range="90">90D</button><button type="button" class="range-btn" data-range="all">All</button></div></div>
+            <div class="stats-grid analytics-stats">
+                <div class="stat-card"><span class="stat-icon">⏱️</span><div><strong id="total-hours">0.0h</strong><span>Total study time</span></div></div>
+                <div class="stat-card"><span class="stat-icon">🧠</span><div><strong id="total-sessions">0</strong><span>Sessions</span></div></div>
+                <div class="stat-card"><span class="stat-icon">🔥</span><div><strong id="current-streak">0</strong><span>Day streak</span></div></div>
+                <div class="stat-card"><span class="stat-icon">⌛</span><div><strong id="avg-session">0m</strong><span>Average session</span></div></div>
+                <div class="stat-card"><span class="stat-icon">🏆</span><div><strong id="best-day-hours">0m</strong><span>Best day</span></div></div>
+                <div class="stat-card"><span class="stat-icon">🎯</span><div><strong id="days-studied">0</strong><span>Days studied</span></div></div>
+            </div>
+            <div class="analytics-grid">
+                <div class="chart-section glass-card chart-wide"><div class="chart-header"><div><h3>Study time</h3><p id="daily-chart-caption">Last 7 days</p></div></div><div class="chart" id="daily-chart"></div></div>
+                <div class="chart-section glass-card"><div class="chart-header"><div><h3>By subject</h3><p>Where your time goes</p></div></div><div class="chart" id="subject-chart"></div></div>
+                <div class="chart-section glass-card"><div class="chart-header"><div><h3>Weekday pattern</h3><p>Your most productive days</p></div></div><div class="chart weekday-chart" id="weekday-chart"></div></div>
+            </div>
+            <div class="heatmap-section glass-card"><div class="chart-header"><div><h3>Study calendar</h3><p>Every square is one day of your study history.</p></div><div class="heatmap-legend"><span>Less</span><i class="level-0"></i><i class="level-1"></i><i class="level-2"></i><i class="level-3"></i><i class="level-4"></i><span>More</span></div></div><div class="heatmap-wrap"><div class="heatmap-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div id="heatmap" class="heatmap" role="grid" aria-label="Study activity calendar"></div></div><div id="heatmap-detail" class="heatmap-detail">Select a day to see its sessions.</div></div>
+        </section>
+
+        <section id="achievements-section" class="tab-content">
+            <div class="section-header"><div><p class="eyebrow">MILESTONES</p><h2>🏆 Achievements</h2></div><button id="add-achievement-btn" class="primary-btn" type="button">＋ Custom Achievement</button></div>
+            <div class="form-card" id="add-achievement-form" hidden><div class="form-group"><label for="achievement-name">Achievement name</label><input type="text" id="achievement-name" placeholder="e.g. Math Master" maxlength="60"></div><div class="form-group"><label for="achievement-description">Description</label><input type="text" id="achievement-description" placeholder="e.g. Study math for 50 hours" maxlength="120"></div><div class="form-grid-2"><div class="form-group"><label for="achievement-icon">Icon</label><input type="text" id="achievement-icon" placeholder="🧮" maxlength="4"></div><div class="form-group"><label for="achievement-target">Target value</label><input type="number" id="achievement-target" min="1" placeholder="50"></div></div><div class="form-actions"><button id="save-achievement-btn" class="primary-btn" type="button">💾 Create Achievement</button><button id="cancel-achievement-btn" class="secondary-btn" type="button">Cancel</button></div></div>
+            <div class="achievements-grid" id="achievements-list"></div>
+        </section>
+
+        <section id="settings-section" class="tab-content">
+            <div class="section-header"><div><p class="eyebrow">PREFERENCES</p><h2>⚙️ Settings</h2></div></div>
+            <div class="settings-layout">
+                <div class="settings-group glass-card"><h3>🍅 Pomodoro</h3><div class="setting-item"><label for="work-time">Focus time (minutes)</label><input type="number" id="work-time" min="1" max="180"></div><div class="setting-item"><label for="break-time">Break time (minutes)</label><input type="number" id="break-time" min="1" max="60"></div></div>
+                <div class="settings-group glass-card"><h3>🔊 Sound & appearance</h3><div class="setting-item"><span>Sound effects</span><label class="switch"><input type="checkbox" id="sound-effects"><span class="slider"></span></label></div><button id="test-sounds-btn" class="secondary-btn full-width" type="button">🔊 Test sound</button></div>
+                <div class="settings-group glass-card"><h3>💾 Your data</h3><p class="setting-help">Export a portable JSON backup or import one later on any browser.</p><div class="button-stack"><button id="export-data-btn" class="primary-btn full-width" type="button">⬇ Export JSON</button><button id="import-data-btn" class="secondary-btn full-width" type="button">⬆ Import JSON</button><input id="import-file-input" type="file" accept="application/json,.json" hidden></div></div>
+                <div class="settings-group glass-card"><h3>📲 Install app</h3><p class="setting-help">Install Study Tracker for a standalone app experience and offline caching.</p><button id="settings-install-btn" class="primary-btn full-width" type="button">📲 Install Study Tracker</button></div>
+                <div class="settings-group glass-card full-span"><h3>📚 Subjects</h3><div class="subjects-list" id="subjects-list"></div></div>
+                <div class="settings-group glass-card danger-zone full-span"><h3>🔄 Reset data</h3><div class="warning-box"><strong>⚠️ This cannot be undone.</strong><p>All sessions, goals, achievements, settings, and subjects will be reset.</p></div><button id="reset-data-btn" class="danger-btn" type="button">Reset all data</button></div>
+            </div>
+        </section>
+    </main>
+    <footer class="app-footer">Built for focused study · Your data stays in your browser</footer>
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+</div>
+<script src="study-tracker.js"></script>
+</body>
+</html>
